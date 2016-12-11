@@ -2,10 +2,10 @@ function [Results] = percentile_bootstrap(cond1_data, cond2_data, varargin)
 % 
 % Function to run a percentile bootstrap on single-sample or paired-samples
 % data. For each of B iterations a bootstrap sample is drawn. For
-% paired-samples cases a bootstrap sample is taken from the difference scores. 
-% The X% trimmed mean is taken for each iteration (default 20% trimming)
-% and (1 - alpha) percent confidence intervals are calculated for the
-% resulting bootstrap distribution (default 95% confidence intervals).
+% paired-samples cases  in this function a bootstrap sample is taken from 
+% the difference scores. The X% trimmed mean is calculated for each iteration
+% (default 20% trimming) and (1 - alpha) percent confidence intervals are 
+% calculated for the resulting bootstrap distribution (default 95% confidence intervals).
 %
 %
 % PUT WILCOX REF HERE
