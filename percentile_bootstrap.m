@@ -171,23 +171,33 @@ sorted_trimmed_means = sort(bootstrap_trimmed_mean);
 CI(1) = prctile(sorted_trimmed_means, significance_threshold / 2);
 CI(2) = prctile(sorted_trimmed_means, (100 - significance_threshold / 2));
 
-% Check whether the confidence intervals include the null hypothesis value (for null hypothesis
-% significance testing)
-if CI(1) > null_value || CI(2) < null_value
+% Calculate the p-value based on the number of bootstrap samples that do
+% not include zero
+if trimmed_mean_difference > null_value % if a positive difference direction
+    p = mean(sorted_trimmed_means(:) <= null_value);
+    p = p .* 2; % Two-tailed correction
+    if p > 1 % If p is larger than 1 then set to 1
+        p = 1;
+    end
+    
+elseif trimmed_mean_difference < null_value % if a negative difference direction
+    p = mean(sorted_trimmed_means(:) >= null_value);
+    p = p .* 2; % Two-tailed correction
+    if p > 1 % If p is larger than 1 then set to 1
+        p = 1;
+    end
+    
+elseif trimmed_mean_difference == 0 % if difference is exactly zero
+    p = 1;
+end
+
+% Determine statistical significance based on p-values
+if p < alpha
     h = 1;
 else
     h = 0;
 end
 
-% Calculate the p-value based on the number of bootstrap samples that do
-% not include zero
-if trimmed_mean_difference > null_value % if a positive difference direction
-    p = mean(sorted_trimmed_means(:) <= null_value);
-elseif trimmed_mean_difference < null_value % if a negative difference direction
-    p = mean(sorted_trimmed_means(:) >= null_value);
-elseif trimmed_mean_difference == 0 % if difference is exactly zero
-    p = 1;
-end
 
 % Copy settings and results into a structure to output
 Results.trimmed_mean_difference = trimmed_mean_difference;
